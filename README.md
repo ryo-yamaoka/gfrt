@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/ryo-yamaoka/gfrt.svg?style=svg)](https://circleci.com/gh/ryo-yamaoka/gfrt)
+
 # gfrt
 
 GFRT (Go Feed Redirect Tester) is a tool of RSS feed redirect test
