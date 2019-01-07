@@ -1,0 +1,11 @@
+version: 2
+
+jobs:
+
+  build:
+    docker:
+      - image: circleci/golang:1.11.4
+    working_directory: /go/src/github.com/ryo-yamaoka/gfrt
+    steps:
+      - checkout
+      - run: go test -v ./...
