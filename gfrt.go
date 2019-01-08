@@ -3,8 +3,10 @@ package main
 import (
 	"flag"
 	"fmt"
+	"html/template"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 )
 
@@ -17,6 +19,7 @@ var (
 	isRedirect             bool
 	listenPortNumber       int
 	redirectDestinationURL string
+	externalHostname       = "127.0.0.1"
 )
 
 func main() {
@@ -30,24 +33,26 @@ func main() {
 		fmt.Println("gfrt " + version)
 		return
 	default:
+		setExternalHostname()
 		log.Printf("listening: %d", listenPortNumber)
-		http.HandleFunc("/", rootHandler)
-		if err := http.ListenAndServe(":"+strconv.Itoa(listenPortNumber), notFoundHandler()); err != nil {
+
+		http.HandleFunc("/feed", feedHandler)
+		http.HandleFunc("/example1", exampleArticle1Handler)
+		if err := http.ListenAndServe(":"+strconv.Itoa(listenPortNumber), nil); err != nil {
 			log.Fatal(err.Error())
 		}
 		return
 	}
 }
 
-func notFoundHandler() http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusNotFound)
-		fmt.Fprintf(w, "Not found")
-		writeDownLog(r.Method, r.RequestURI, http.StatusNotFound)
-	})
+func setExternalHostname() {
+	e := os.Getenv("GFRT_EXTERNAL_HOSTNAME")
+	if e != "" {
+		externalHostname = e
+	}
 }
 
-func rootHandler(w http.ResponseWriter, r *http.Request) {
+func feedHandler(w http.ResponseWriter, r *http.Request) {
 	responseCode := http.StatusOK
 	switch r.Method {
 	case http.MethodGet:
@@ -56,7 +61,7 @@ func rootHandler(w http.ResponseWriter, r *http.Request) {
 			http.Redirect(w, r, "http://www.example.com/", responseCode)
 		} else {
 			w.WriteHeader(responseCode)
-			fmt.Fprintf(w, "TODO") // TODO: implement RSS feed response
+			feedResponse(w)
 		}
 		writeDownLog(r.Method, r.RequestURI, responseCode)
 		return
@@ -83,4 +88,37 @@ func rootHandler(w http.ResponseWriter, r *http.Request) {
 
 func writeDownLog(requestMethod, requestURI string, responseCode int) {
 	log.Printf("%s %s %d", requestMethod, requestURI, responseCode)
+}
+
+func feedResponse(w http.ResponseWriter) {
+	templateFilePath := "feed.goxml"
+	t := template.Must(template.ParseFiles(templateFilePath))
+	m := map[string]string{
+		"EXTERNAL_URL": externalHostname,
+	}
+	if err := t.ExecuteTemplate(w, templateFilePath, m); err != nil {
+		log.Fatal(err.Error())
+	}
+}
+
+func exampleArticle1Handler(w http.ResponseWriter, r *http.Request) {
+	responseCode := http.StatusOK
+	switch r.Method {
+	case http.MethodGet:
+		templateFilePath := "example1.gohtml"
+		t := template.Must(template.ParseFiles(templateFilePath))
+		m := map[string]string{
+			"EXTERNAL_URL": externalHostname,
+		}
+		if err := t.ExecuteTemplate(w, templateFilePath, m); err != nil {
+			log.Fatal(err.Error())
+		}
+		writeDownLog(r.Method, r.RequestURI, http.StatusOK)
+	default:
+		responseCode = http.StatusMethodNotAllowed
+		w.WriteHeader(responseCode)
+		fmt.Fprintf(w, "Method not allowed")
+		writeDownLog(r.Method, r.RequestURI, responseCode)
+		return
+	}
 }
