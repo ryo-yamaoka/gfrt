@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xml:lang="ja-JP" xmlns="http://www.w3.org/2005/Atom">
+  <id>tag:localhost,2017:feed</id>
+  <link rel="alternate" type="text/html" href="http://{{.EXTERNAL_URL}}"/>
+  <link rel="self" type="application/atom+xml" href="http://{{.EXTERNAL_URL}}/feed.xml"/>
+  <author><name>Example Communications</name></author>
+  <title>Example feed</title>
+  <updated>2016-01-23T04:05:03Z</updated>
+  <link href="http://{{.EXTERNAL_URL}}"/>
+  <subtitle type='text'>Example description</subtitle>
+  <entry>
+    <title>Example post 1</title>
+    <link href="http://{{.EXTERNAL_URL}}/example1.html"/>
+    <id>tag:localhost,2017:entry://example1</id>
+    <updated>2016-01-23T04:05:01Z</updated>
+    <summary>Example summary 1</summary>
+    <content>Example content 1</content>
+  </entry>
+</feed>
