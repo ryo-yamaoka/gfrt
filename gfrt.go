@@ -37,7 +37,7 @@ func main() {
 		log.Printf("listening: %d", listenPortNumber)
 
 		http.HandleFunc("/feed", feedHandler)
-		http.HandleFunc("/example1", exampleArticle1Handler)
+		http.HandleFunc("/example1.html", exampleArticle1Handler)
 		if err := http.ListenAndServe(":"+strconv.Itoa(listenPortNumber), nil); err != nil {
 			log.Fatal(err.Error())
 		}
@@ -58,7 +58,7 @@ func feedHandler(w http.ResponseWriter, r *http.Request) {
 	case http.MethodGet:
 		if isRedirect {
 			responseCode = http.StatusMovedPermanently
-			http.Redirect(w, r, "http://www.example.com/", responseCode)
+			http.Redirect(w, r, redirectDestinationURL, responseCode)
 		} else {
 			w.WriteHeader(responseCode)
 			feedResponse(w)
