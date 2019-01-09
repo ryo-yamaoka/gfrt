@@ -26,7 +26,7 @@ $ ./gfrt -p 8080
 
 ### Get RSS feed or try redirect
 
-If you want to redirect tracking, you need set to `-L` curl option.
+If you want to redirect tracking, you need to set `-L` curl option.
 
 ```bash
 $ curl -L -X GET http://localhost:8080/feed
