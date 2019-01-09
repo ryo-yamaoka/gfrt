@@ -9,7 +9,7 @@ GFRT (Go Feed Redirect Tester) is a tool of RSS feed redirect test
 * `gfrt`: Start server
   * `-v`: Print software version
   * `-p INT`: Designate listen port number (default: 80)
-  * `-r URL`: Disignate redirect destrination URL (default: http://www.example.com/)
+  * `-r URL`: Disignate redirect destination URL (default: http://www.example.com/)
 
 * Environment variables
   * GFRT_EXTERNAL_HOSTNAME
@@ -26,7 +26,7 @@ $ ./gfrt -p 8080
 
 ### Get RSS feed or try redirect
 
-If you want to redirect tracking, you need set `-L` curl option.
+If you want to redirect tracking, you need set to `-L` curl option.
 
 ```bash
 $ curl -L -X GET http://localhost:8080/feed
