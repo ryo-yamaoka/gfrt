@@ -1,11 +1,49 @@
 version: 2
 
 jobs:
-
-  build:
+  test-116:
     docker:
-      - image: circleci/golang:1.11.4
+      - image: circleci/golang:1.16
     working_directory: /go/src/github.com/ryo-yamaoka/gfrt
     steps:
       - checkout
-      - run: go test -v ./...
+      - run: make test
+
+  test-117:
+    docker:
+      - image: circleci/golang:1.17
+    working_directory: /go/src/github.com/ryo-yamaoka/gfrt
+    steps:
+      - restore_cache:
+          keys:
+            - gfrt-go-mod-{{ checksum "go.sum" }}
+      - checkout
+      - run: make test
+      - save_cache:
+          key: gfrt-go-mod-{{ checksum "go.sum" }}
+          paths:
+            - "/go/pkg/mod"
+
+  build:
+    docker:
+      - image: circleci/golang:1.17
+    working_directory: /go/src/github.com/ryo-yamaoka/gfrt
+    steps:
+      - restore_cache:
+          keys:
+            - gfrt-go-mod-{{ checksum "go.sum" }}
+      - checkout
+      - run: make cross-compile
+      - store_artifacts:
+            path: bin/
+
+workflows:
+  version: 2
+  default:
+    jobs:
+      - test-116
+      - test-117
+      - build:
+          requires:
+            - test-116
+            - test-117
