@@ -13,7 +13,8 @@ GFRT (Go Feed Redirect Tester) is a tool of RSS feed redirect test
 
 * Environment variables
   * GFRT_EXTERNAL_HOSTNAME
-    * It sets to external link for feed and article link
+    * Set an IP address or domain to access the GFRT, this will be reflected in GFRT's feeds and articles.
+    * Sets to external link for feed and article link
     * If you need to change listen port, this is must include port number (ex: `192.0.2.1:8080`)
     * default(not set): `127.0.0.1`
 

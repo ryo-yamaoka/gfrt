@@ -92,8 +92,7 @@ func TestExampleArticle1Handler(t *testing.T) {
 		rec := httptest.NewRecorder()
 		req := httptest.NewRequest(pattern.method, pattern.path, nil)
 		exampleArticle1Handler(rec, req)
-		switch {
-		case rec.Code != pattern.expectResponseCode:
+		if rec.Code != pattern.expectResponseCode {
 			t.Errorf("mismatch response code(%d): %d != %d", i, rec.Code, pattern.expectResponseCode)
 		}
 	}
